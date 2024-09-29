@@ -23,7 +23,13 @@ def predict_process(test_path,config,base_dir):
     net.load_state_dict(checkpoint['state_dict'])
 
     pred = []
-    net = net.cuda()
+
+    if torch.cuda.is_available():
+        dev = torch.device("cuda")
+    else:
+        dev = torch.device("cpu")
+
+    net = net.to(dev)
     net.eval()
 
     in_1 = sitk.ReadImage(os.path.join(base_dir,test_path + '_0000.nii.gz'))
@@ -45,7 +51,12 @@ def predict_process(test_path,config,base_dir):
             new_image = np.expand_dims(new_image,axis=0)
             data = torch.from_numpy(new_image)
 
-            data = data.cuda()
+            if torch.cuda.is_available():
+                dev = torch.device("cuda")
+            else:
+                dev = torch.device("cpu")
+
+            data = data.to(dev)
             with autocast(False):
                 output = net(data)
             if isinstance(output,tuple) or isinstance(output,list):
@@ -61,20 +72,23 @@ def predict_process(test_path,config,base_dir):
 def save_npy(
     data_path: Union[Path, str],
     ckpt_path_base: Union[Path, str] = './new_ckpt/seg',
-    save_dir_base: Union[Path, str] = './segout'
+    save_dir_base: Union[Path, str] = './segout',
+    excluded_sequences: list = []
 ):
     config = Config()
     for fold in range(1,6):
         print('****fold%d****'%fold)
         config.fold = fold
         config.ckpt_path = os.path.join(ckpt_path_base, config.version, f'fold{fold}')
+        print(config.ckpt_path)
         save_dir = os.path.join(save_dir_base, config.version, f'fold{fold}')
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         pathlist = ['_'.join(path.split('_')[:2]) for path in os.listdir(data_path)]
         pathlist = list(set(pathlist))
-
+        print(pathlist)
         for path in pathlist:
+            print(path)
             pred = predict_process(path,config,data_path)
             print(pred.shape)
             np.save(os.path.join(save_dir,path+'.npy'),pred)
@@ -147,9 +161,13 @@ class Config:
 
 if __name__ == '__main__':
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = '3'
+    if torch.cuda.is_available():
+        os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2'
+    else:
+        os.environ['CUDA_VISIBLE_DEVICES'] = ''
     # test data
     data_path = '/staff/honeyk/project/picai_prep-main/open_source/nnUNet_test_data'
+    #data_path = '/Data/output_fold0/segmentation/'
     outdir = './segout/segmentation_result'
     save_npy(data_path)
     vote_dir()

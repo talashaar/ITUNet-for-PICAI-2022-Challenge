@@ -104,11 +104,12 @@ def store_images_labels_2d(save_path, patient_id, cts, labels):
 
 
 def make_data(
-    base_dir: Union[Path, str] = '../nnUNet_raw_data/Task2201_picai_baseline/imagesTr',
-    label_dir: Union[Path, str] = '../nnUNet_raw_data/Task2201_picai_baseline/labelsTr',
-    d2_dir: Union[Path, str] = 'path/to/images_illness_3c',
+    base_dir: Union[Path, str] = '../Data/output_fold0/nnUNet_raw_data/Task2201_picai_baseline/imagesTr',
+    label_dir: Union[Path, str] = '../Data/output_fold0/nnUNet_raw_data/Task2201_picai_baseline/labelsTr',
+    d2_dir: Union[Path, str] = '/Data/output_fold0/classification/path/to/images_illness_3c',
     csv_save_path: Union[Path, str] = 'picai_illness_3c.csv',
 ):
+    print(f"Excluding the following sequences: {', '.join(excluded_sequences)}")
     os.makedirs(d2_dir, exist_ok=True)
 
     count = 0

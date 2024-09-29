@@ -9,7 +9,7 @@ VERSION = 'itunet_d24'
 PHASE = 'seg'   # 'seg' or 'detect'
 NUM_CLASSES = 2 if 'seg' in PHASE else 3
 
-DEVICE = '3'
+DEVICE = '0'
 # True if use internal pre-trained model
 # Must be True when pre-training and inference
 PRE_TRAINED = False

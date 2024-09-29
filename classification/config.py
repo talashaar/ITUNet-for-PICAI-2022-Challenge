@@ -3,7 +3,7 @@ __all__ = ['efficientnet-b5']
 TASK = 'picai'
 NET_NAME = 'efficientnet-b5'
 VERSION = 'v0'
-DEVICE = '3'
+DEVICE = '0'
 # Must be True when pre-training and inference
 PRE_TRAINED = False
 # 1,2,3,4

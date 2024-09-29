@@ -50,8 +50,11 @@ class SemanticSeg(object):
 
         self.transformer_depth = transformer_depth
 
-        os.environ['CUDA_VISIBLE_DEVICES'] = self.device
-
+        if torch.cuda.is_available():
+            os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2'
+        else:
+            os.environ['CUDA_VISIBLE_DEVICES'] = ''
+       
         self.net = itunet_2d(n_channels=self.channels,n_classes=self.num_classes, image_size= tuple(self.input_shape), transformer_depth = self.transformer_depth)
 
         if self.pre_trained:
@@ -115,9 +118,14 @@ class SemanticSeg(object):
           pin_memory=True
         )
 
+        if torch.cuda.is_available():
+            dev = torch.device("cuda")
+        else:
+            dev = torch.device("cpu")
+
         # copy to gpu
-        net = net.cuda()
-        loss = loss.cuda()
+        net = net.to(dev)
+        loss = loss.to(dev)
 
         # optimizer setting
         optimizer = torch.optim.Adam(net.parameters(),lr=lr,weight_decay=self.weight_decay)
@@ -191,6 +199,12 @@ class SemanticSeg(object):
         train_loss = AverageMeter()
         train_dice = AverageMeter()
 
+        if torch.cuda.is_available():
+            dev = torch.device("cuda")
+        else:
+            dev = torch.device("cpu")
+
+
         from segmentation.metrics import RunningDice
         run_dice = RunningDice(labels=range(self.num_classes),ignore_label=-1)
 
@@ -199,8 +213,8 @@ class SemanticSeg(object):
             data = sample['image']
             target = sample['label']
 
-            data = data.cuda()
-            target = target.cuda()
+            data = data.to(dev)
+            target = target.to(dev)
 
             with autocast(self.use_fp16):
                 output = net(data)
@@ -267,16 +281,27 @@ class SemanticSeg(object):
         val_loss = AverageMeter()
         val_dice = AverageMeter()
 
+        if torch.cuda.is_available():
+            dev = torch.device("cuda")
+        else:
+            dev = torch.device("cpu")
+
+
         from segmentation.metrics import RunningDice
         run_dice = RunningDice(labels=range(self.num_classes),ignore_label=-1)
 
         with torch.no_grad():
+            if torch.cuda.is_available():
+                dev = torch.device("cuda")
+            else:
+                dev = torch.device("cpu")
+
             for step,sample in enumerate(val_loader):
                 data = sample['image']
                 target = sample['label']
 
-                data = data.cuda()
-                target = target.cuda()
+                data = data.to(dev)
+                target = target.to(dev)
                 with autocast(self.use_fp16):
                     output = net(data)
                     if isinstance(output,tuple):
@@ -310,9 +335,14 @@ class SemanticSeg(object):
 
 
     def val(self,val_path,net = None,val_transformer=None,mode = 'val'):
+        if torch.cuda.is_available():
+            dev = torch.device("cuda")
+        else:
+            dev = torch.device("cpu")
+
         if net is None:
             net = self.net
-            net = net.cuda()
+            net = net.to(dev)
         net.eval()
 
         class Normalize_2d(object):
@@ -343,13 +373,20 @@ class SemanticSeg(object):
         y_true = []
 
         with torch.no_grad():
+            if torch.cuda.is_available():
+                dev = torch.device("cuda")
+            else:
+                dev = torch.device("cpu")
+
+
             for step,sample in enumerate(val_loader):
                 data = sample['image']
                 target = sample['label']
                 
                 data = data.squeeze().transpose(1,0) 
-                data = data.cuda()
-                target = target.cuda()
+                data = data.to(dev)
+                target = target.to(dev)
+                
                 with autocast(self.use_fp16):
                     output = net(data)
                     if isinstance(output,tuple):

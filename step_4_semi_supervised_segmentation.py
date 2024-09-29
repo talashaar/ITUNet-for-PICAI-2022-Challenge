@@ -40,7 +40,7 @@ def main():
     print(f"output_dir: {output_dir}")
 
     # set training parameters
-    INIT_TRAINER['device'] = "0"
+    INIT_TRAINER['device'] = "0,1,2"
     INIT_TRAINER['num_classes'] = 3
     PHASE = "detect"
 

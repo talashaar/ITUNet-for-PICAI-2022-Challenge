@@ -21,7 +21,7 @@ def csv_reader_single(csv_file,key_col=None,value_col=None):
     - key_col: string, specified column as key, the value of the column must be unique. 
     - value_col: string,  specified column as value
     '''
-    file_csv = pd.read_csv(csv_file)
+    file_csv = pd.read_csv(csv_file,engine = 'python')
     key_list = file_csv[key_col].values.tolist()
     value_list = file_csv[value_col].values.tolist()
     

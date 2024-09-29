@@ -34,20 +34,21 @@ def main():
 
     # Perform inference with the classification model
     predict_test5c(
-        weight_path=supervised_weights_dir / 'ckpt/picai/v0/',
+        weight_path=supervised_weights_dir / 'testpreprocess2_classification_output/ckpt/picai/v0/', #classification
         base_dir=preprocessed_dir / 'nnUNet_test_data',
         csv_save_path=workdir / 'test_3c.csv',
     )
-
+    print("Reached here")
     # Perform inference with the segmentation model
     data_path = preprocessed_dir / "nnUNet_test_data"
-    outdir = workdir / 'segout/segmentation_result'
+    outdir = workdir / 'segout/full_segmentation_result'
     save_npy(
         data_path=data_path,
-        ckpt_path_base=supervised_weights_dir / 'ckpt/seg',
+        ckpt_path_base=supervised_weights_dir / 'testpreprocess2_segmentation_output/ckpt/seg/',
         save_dir_base=workdir / 'segout',
+        
     )
-
+    
     # Ensemble segmentation results
     config = Config()
     vote_dir(datadir=workdir / f'segout/{config.version}')

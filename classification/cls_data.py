@@ -109,7 +109,7 @@ def make_data(
     d2_dir: Union[Path, str] = '/Data/output_fold0/classification/path/to/images_illness_3c',
     csv_save_path: Union[Path, str] = 'picai_illness_3c.csv',
 ):
-    print(f"Excluding the following sequences: {', '.join(excluded_sequences)}")
+    
     os.makedirs(d2_dir, exist_ok=True)
 
     count = 0
@@ -133,13 +133,13 @@ def make_data(
 
         in_1 = sitk.ReadImage(os.path.join(base_dir,path + '_0000.nii.gz'))
         in_2 = sitk.ReadImage(os.path.join(base_dir,path + '_0001.nii.gz'))
-        in_3 = sitk.ReadImage(os.path.join(base_dir,path + '_0002.nii.gz'))
+        #in_3 = sitk.ReadImage(os.path.join(base_dir,path + '_0002.nii.gz'))
         
 
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
-        in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
-        img = np.stack((in_1,in_2,in_3),axis=0)
+        #in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
+        img = np.stack((in_1,in_2),axis=0)
         # print(img.shape)
 
         plist,llist = store_images_labels_2d(d2_dir,count,img,seg_image)

@@ -18,8 +18,21 @@ def predict_process(test_path,config,base_dir):
     print(weight_path)
 
     # get net
-    net = itunet_2d(n_channels=config.channels,n_classes=config.num_classes, image_size= tuple((384,384)), transformer_depth = 24)
+    net = itunet_2d(n_channels=2, n_classes=config.num_classes, image_size=(384, 384), transformer_depth=24)
     checkpoint = torch.load(weight_path)
+    pretrained_conv_weights = checkpoint['state_dict']['transblock.patch_embeddings.weight']
+    if pretrained_conv_weights.shape[1] == 3:
+        new_conv_weights = pretrained_conv_weights[:, :2, :, :]  # Take only the first 2 channels
+        checkpoint['state_dict']['transblock.patch_embeddings.weight'] = new_conv_weights
+
+     # Modify the input layer for inc.double_conv
+    pretrained_conv_weights = checkpoint['state_dict']['inc.double_conv.0.weight']
+    if pretrained_conv_weights.shape[1] == 3:
+        # Adjust the input weights for the first convolution layer
+        new_conv_weights = pretrained_conv_weights[:, :2, :, :]  # Take only the first 2 channels
+        checkpoint['state_dict']['inc.double_conv.0.weight'] = new_conv_weights
+
+    # Load the modified state dict into the model
     net.load_state_dict(checkpoint['state_dict'])
 
     pred = []
@@ -34,13 +47,13 @@ def predict_process(test_path,config,base_dir):
 
     in_1 = sitk.ReadImage(os.path.join(base_dir,test_path + '_0000.nii.gz'))
     in_2 = sitk.ReadImage(os.path.join(base_dir,test_path + '_0001.nii.gz'))
-    in_3 = sitk.ReadImage(os.path.join(base_dir,test_path + '_0002.nii.gz'))
+    #in_3 = sitk.ReadImage(os.path.join(base_dir,test_path + '_0002.nii.gz'))
 
     in_1 = sitk.GetArrayFromImage(in_1).astype(np.float32)
     in_2 = sitk.GetArrayFromImage(in_2).astype(np.float32)
-    in_3 = sitk.GetArrayFromImage(in_3).astype(np.float32)
+    #in_3 = sitk.GetArrayFromImage(in_3).astype(np.float32)
 
-    image = np.stack((in_1,in_2,in_3),axis=0)
+    image = np.stack((in_1,in_2),axis=0)
 
     with torch.no_grad():
         for i in range(image.shape[1]):
@@ -162,7 +175,7 @@ class Config:
 if __name__ == '__main__':
 
     if torch.cuda.is_available():
-        os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2'
+        os.environ['CUDA_VISIBLE_DEVICES'] = '5'
     else:
         os.environ['CUDA_VISIBLE_DEVICES'] = ''
     # test data

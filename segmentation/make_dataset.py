@@ -7,9 +7,11 @@ import h5py
 import random
 
 def save_as_hdf5(data, save_path, key):
-    hdf5_file = h5py.File(save_path, 'a')
-    hdf5_file.create_dataset(key, data=data)
-    hdf5_file.close()
+    with h5py.File(save_path, 'a') as hdf5_file:  # Open in append mode
+        if key in hdf5_file:
+            print(f"Dataset {key} already exists in {save_path}, deleting and recreating it.")
+            del hdf5_file[key]  # Delete existing dataset
+        hdf5_file.create_dataset(key, data=data)
 
 def csv_reader_single(csv_file,key_col=None,value_col=None):
     '''
@@ -77,7 +79,7 @@ def make_segdata(base_dir,label_dir,output_dir):
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
         #in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
-        img = np.stack((in_1,in_2),axis=0)
+        img = np.stack((in_1,in_2,0),axis=0)
 
         hdf5_path = os.path.join(data_dir_3d, str(count) + '.hdf5')
 
@@ -125,13 +127,13 @@ def make_semidata(base_dir,label_dir,output_dir,test_dir,seg_dir,csv_path):
 
         in_1 = sitk.ReadImage(os.path.join(test_dir,path + '_0000.nii.gz'))
         in_2 = sitk.ReadImage(os.path.join(test_dir,path + '_0001.nii.gz'))
-        in_3 = sitk.ReadImage(os.path.join(test_dir,path + '_0002.nii.gz'))
+        #in_3 = sitk.ReadImage(os.path.join(test_dir,path + '_0002.nii.gz'))
         
 
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
-        in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
-        img = np.stack((in_1,in_2,in_3),axis=0)
+        #in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
+        img = np.stack((in_1,in_2),axis=0)
 
         outc = rand_list[count]
 
@@ -153,12 +155,12 @@ def make_semidata(base_dir,label_dir,output_dir,test_dir,seg_dir,csv_path):
 
         in_1 = sitk.ReadImage(os.path.join(base_dir,path + '_0000.nii.gz'))
         in_2 = sitk.ReadImage(os.path.join(base_dir,path + '_0001.nii.gz'))
-        in_3 = sitk.ReadImage(os.path.join(base_dir,path + '_0002.nii.gz'))
+        #in_3 = sitk.ReadImage(os.path.join(base_dir,path + '_0002.nii.gz'))
 
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
-        in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
-        img = np.stack((in_1,in_2,in_3),axis=0)
+        #in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
+        img = np.stack((in_1,in_2),axis=0)
 
         outc = rand_list[count]
 

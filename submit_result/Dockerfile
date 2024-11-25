@@ -2,7 +2,7 @@ FROM pytorch/pytorch:1.9.0-cuda10.2-cudnn7-runtime
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git
+    apt-get install -y git build-essential
 
 RUN groupadd -r algorithm && useradd -m --no-log-init -r -g algorithm algorithm
 
@@ -24,6 +24,7 @@ RUN python3 -m pip install --user -r requirements.txt
 
 COPY --chown=algorithm:algorithm process.py /opt/algorithm/
 COPY --chown=algorithm:algorithm model.py /opt/algorithm/
+#COPY --chown=algorithm:algorithm test /output/
 
 ENTRYPOINT ["python3", "process.py"]
 

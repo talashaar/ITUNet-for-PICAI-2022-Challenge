@@ -40,7 +40,7 @@ def main():
     print(f"output_dir: {output_dir}")
 
     # set training parameters
-    INIT_TRAINER['device'] = "0"
+    INIT_TRAINER['device'] = "5"
 
     path_list = (preprocessed_dir / "segmentation/segdata/data_2d").glob("*.hdf5")
     path_list = [str(path) for path in path_list]

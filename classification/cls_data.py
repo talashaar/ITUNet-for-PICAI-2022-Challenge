@@ -6,7 +6,7 @@ import SimpleITK as sitk
 import pandas as pd
 from tqdm import tqdm
 import numpy as np
-from skimage.exposure.exposure import rescale_intensity
+from skimage.exposure.exposure import rescale_intensity, equalize_hist
 from PIL import Image
 import torch
 from torch.cuda.amp import autocast as autocast
@@ -90,7 +90,9 @@ def store_images_labels_2d(save_path, patient_id, cts, labels):
         # ct(3, h, w)
         lab = labels[i,:,:]
         for j in range(ct.shape[0]):
-            ct[j] = rescale_intensity(ct[j], out_range=(0, 255))
+            #ct[j] = rescale_intensity(ct[j], out_range=(0, 255))
+            print("equalize hist")
+            ct[j] = equalize_hist(ct[j])
         img = Image.fromarray(ct.transpose((1,2,0)).astype(np.uint8))
 
         path = os.path.join(save_path, '%s_%d.png' % (patient_id, i))
@@ -128,7 +130,7 @@ def make_data(
         seg_image = sitk.GetArrayFromImage(seg).astype(np.uint8)
         # seg_image[seg_image>0] = 1
         seg_image[seg_image>3] = 3
-        if np.max(seg_image) == 0:
+        if np.max(seg_image) == -1:
             continue
 
         in_1 = sitk.ReadImage(os.path.join(base_dir,path + '_0000.nii.gz'))
@@ -138,8 +140,10 @@ def make_data(
 
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
+        #in_3 = in_2
+        #in_3[in_3 >=0] = 0
         #in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
-        img = np.stack((in_1,in_2),axis=0)
+        img = np.stack((in_1,in_2,0),axis=0)
         # print(img.shape)
 
         plist,llist = store_images_labels_2d(d2_dir,count,img,seg_image)
@@ -165,11 +169,23 @@ def predict_test5c(
     cls_nets = []
     for weight_path in weight_list:
         cls_net = EfficientNet.from_pretrained(model_name='efficientnet-b5',
-                                    in_channels=3,
-                                    num_classes=3,
-                                    advprop=True)
+                                               in_channels=2,  # Correct for 2 channels
+                                               num_classes=3,
+                                               advprop=True)
+        
+        # Load the checkpoint
         checkpoint = torch.load(weight_path)
+        
+        # Modify the first convolution layer to accept 2 channels instead of 3
+        pretrained_conv_weights = checkpoint['state_dict']['_conv_stem.weight']
+        if pretrained_conv_weights.shape[1] == 3:
+            # Average over the first 2 channels, or alternatively, you can take only the first 2
+            new_conv_weights = pretrained_conv_weights[:, :2, :, :]  # Take only the first 2 channels
+            checkpoint['state_dict']['_conv_stem.weight'] = new_conv_weights
+
+        # Load the modified state dict into the model
         cls_net.load_state_dict(checkpoint['state_dict'])
+
         cls_net.cuda()
         cls_net.eval()
         cls_nets.append(cls_net)
@@ -181,27 +197,26 @@ def predict_test5c(
     pathlist = ['_'.join(path.split('_')[:2]) for path in os.listdir(base_dir)]
     pathlist = list(set(pathlist))
     l = len(pathlist)
-    print(l)
+    print(f"Number of paths found: {l}")
 
     for path in pathlist:
-        # count += len(sub_path_list)
-        in_1 = sitk.ReadImage(os.path.join(base_dir,path + '_0000.nii.gz'))
-        in_2 = sitk.ReadImage(os.path.join(base_dir,path + '_0001.nii.gz'))
-        in_3 = sitk.ReadImage(os.path.join(base_dir,path + '_0002.nii.gz'))
-        
+        print(f"Processing: {path}")
+        in_1 = sitk.ReadImage(os.path.join(base_dir, path + '_0000.nii.gz'))
+        in_2 = sitk.ReadImage(os.path.join(base_dir, path + '_0001.nii.gz'))
 
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
-        in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
-        image = np.stack((in_1,in_2,in_3),axis=0).astype(np.float32)
+
+        # Stack only two sequences
+        image = np.stack((in_1, in_2), axis=0).astype(np.float32)
 
         for i in range(image.shape[0]):
             for j in range(image.shape[1]):
                 if np.max(image[i,j]) != 0:
-                    image[i,j] = image[i,j]/np.max(image[i,j]) 
+                    image[i,j] = image[i,j] / np.max(image[i,j])
 
         data = torch.from_numpy(image)
-        data = data.transpose(1,0).cuda()
+        data = data.transpose(1, 0).cuda()
 
         with torch.no_grad():
             cls_results = []
@@ -209,21 +224,21 @@ def predict_test5c(
                 with autocast(True):
                     cls_result = cls_net(data)
                 output = F.softmax(cls_result, dim=1)
-                # b * c
                 output = output.float().squeeze().cpu().numpy()
                 cls_results.append(output)
-            cls_result = np.mean(np.asarray(cls_results),axis=0)
-            cls_result = np.max(cls_result,axis=0)
-        # print(cls_result.shape)
-        l=np.argmax(cls_result[1:]) + 1 
 
-        print(l)
+            cls_result = np.mean(np.asarray(cls_results), axis=0)
+            cls_result = np.max(cls_result, axis=0)
+
+        l = np.argmax(cls_result[1:]) + 1
+        print(f"Label predicted: {l}")
 
         info['id'].append(path)
         info['label'].append(l)
 
-    cc= pd.DataFrame(info)
-    cc.to_csv(csv_save_path,index=False)
+    cc = pd.DataFrame(info)
+    cc.to_csv(csv_save_path, index=False)
+
 
 
 if __name__ == "__main__":

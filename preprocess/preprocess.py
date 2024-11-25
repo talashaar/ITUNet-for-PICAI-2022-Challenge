@@ -93,7 +93,7 @@ def generate_mha2nnunet_settings(
             # construct scan paths
             scan_paths = [
                 f"{patient_id}/{subject_id}_{modality}.mha"
-                for modality in ["adc", "hbv"]
+                for modality in ["t2w", "adc"]
             ]
             all_scans_found = all([
                 os.path.exists(os.path.join(archive_dir, path))
@@ -127,9 +127,9 @@ def generate_mha2nnunet_settings(
             "licence": "",
             "release": "1.0",
             "modality": {
-               # "0": "T2W",
-                "0": "CT",
-                "1": "HBV"
+                "0": "T2W",
+                "1": "CT",
+               # "1": "HBV"
             },
             "labels": {
                 "0": "background",
@@ -191,7 +191,7 @@ def convert_dataset_unlabeled(
             # construct scan paths
             scan_paths = [
                 f"{patient_id}/{subject_id}_{modality}.mha"
-                for modality in [ "adc", "hbv"]
+                for modality in [ "t2w", "adc"]
             ]
             all_scans_found = all([
                 os.path.exists(os.path.join(archive_dir, path))

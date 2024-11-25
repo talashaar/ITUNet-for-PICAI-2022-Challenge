@@ -51,7 +51,7 @@ def main():
 
     # update paths to preprocessed data directory
     pre_label_dict = {
-        preprocessed_dir / Path(path).relative_to(preprocessed_dir): label
+        preprocessed_dir / Path(path).relative_to("/output"): label
         for path, label in pre_label_dict.items()
     }
 

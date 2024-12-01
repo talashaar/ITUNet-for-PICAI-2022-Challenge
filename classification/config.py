@@ -35,7 +35,7 @@ INIT_TRAINER = {
     'channels': 3,
     'num_classes': NUM_CLASSES,
     'input_shape': (192,192),
-    'batch_size': 12,
+    'batch_size': 24,
     'num_workers': 4,
     'device': DEVICE,
     'pre_trained': PRE_TRAINED,

@@ -18,14 +18,14 @@ settings = {
     "preprocessing": {
         # resample and perform centre crop:
         "matrix_size": [
-            12,
+            24,
             192,
             192
         ],
         "spacing": [
-            6.0,
-            1.0,
-            1.0
+            3.0,
+            0.5,
+            0.5
         ],
     }
 }

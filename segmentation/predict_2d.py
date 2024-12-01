@@ -18,7 +18,7 @@ def predict_process(test_path,config,base_dir):
     print(weight_path)
 
     # get net
-    net = itunet_2d(n_channels=config.channels,n_classes=config.num_classes, image_size= tuple((192,192)), transformer_depth = 12)
+    net = itunet_2d(n_channels=config.channels,n_classes=config.num_classes, image_size= tuple((192,192)), transformer_depth = 24)
     checkpoint = torch.load(weight_path)
     net.load_state_dict(checkpoint['state_dict'])
 

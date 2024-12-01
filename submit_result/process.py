@@ -105,7 +105,7 @@ class csPCaAlgorithm(SegmentationAlgorithm):
         # define input data specs [image shape, spatial res, num channels, num classes]
         self.img_spec = {
             'image_shape': [24, 192, 192],
-            'spacing': [6.0, 1.0, 1.0],
+            'spacing': [3.0, 0.9, 0.9],
             'num_channels': 3,
             'num_classes': 2,
         }

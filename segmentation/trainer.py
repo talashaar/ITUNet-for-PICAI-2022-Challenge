@@ -24,7 +24,7 @@ warnings.filterwarnings('ignore')
 
 
 class SemanticSeg(object):
-    def __init__(self,lr=1e-3,n_epoch=1,channels=3,num_classes=2, input_shape=(192,192),batch_size=6,num_workers=0,
+    def __init__(self,lr=1e-3,n_epoch=1,channels=3,num_classes=2, input_shape=(256,256),batch_size=6,num_workers=0,
                   device=None,pre_trained=False,ckpt_point=True,weight_path=None,weight_decay=0.0001,
                   use_fp16=False,transformer_depth = 18):
         super(SemanticSeg,self).__init__()

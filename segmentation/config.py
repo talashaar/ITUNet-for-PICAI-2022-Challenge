@@ -3,7 +3,7 @@ import os
 
 from segmentation.utils import get_weight_path
 
-TRANSFORMER_DEPTH = 24
+TRANSFORMER_DEPTH = 20
 VERSION = 'itunet_d24'
 
 PHASE = 'seg'   # 'seg' or 'detect'
@@ -36,7 +36,7 @@ print(WEIGHT_PATH)
 INIT_TRAINER = {
   'num_classes':NUM_CLASSES, 
   'n_epoch':160,
-  'batch_size':24,  
+  'batch_size':20,  
   'num_workers':4,
   'device':DEVICE,
   'pre_trained':PRE_TRAINED,

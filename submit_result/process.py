@@ -104,8 +104,8 @@ class csPCaAlgorithm(SegmentationAlgorithm):
 
         # define input data specs [image shape, spatial res, num channels, num classes]
         self.img_spec = {
-            'image_shape': [24, 192, 192],
-            'spacing': [3.0, 0.9, 0.9],
+            'image_shape': [20, 256, 256],
+            'spacing': [3.0, 0.5, 0.5],
             'num_channels': 3,
             'num_classes': 2,
         }
@@ -133,7 +133,7 @@ class csPCaAlgorithm(SegmentationAlgorithm):
                 # otherwise arguments 'model_strides' and 'model_features' must also
                 # be explicitly passed directly to function 'neural_network_for_run'
 
-                model = itunet_2d(n_channels=3,n_classes=3, image_size= tuple([192,192]), transformer_depth = 24)
+                model = itunet_2d(n_channels=3,n_classes=3, image_size= tuple([256,256]), transformer_depth = 20)
 
                 # load trained weights for the fold
                 checkpoint = torch.load(weight_path,map_location=self.device)
@@ -201,7 +201,7 @@ class csPCaAlgorithm(SegmentationAlgorithm):
         ]
         image = np.stack(cropped_img,axis=0).astype(np.float32)
 
-        zero_mask = np.ones((24,),dtype=np.float32)
+        zero_mask = np.ones((20,),dtype=np.float32)
 
         for i in range(image.shape[0]):
             for j in range(image.shape[1]):

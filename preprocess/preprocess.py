@@ -10,9 +10,10 @@ from picai_prep.examples.mha2nnunet.picai_archive import \
     generate_mha2nnunet_settings
 from picai_prep.preprocessing import PreprocessingSettings, Sample
 from tqdm import tqdm
-
+from picai_prep.data_utils import PathLike
 from classification.cls_data import make_data
 from segmentation.make_dataset import make_segdata
+from typing import Optional
 
 settings = {
     "preprocessing": {
@@ -80,7 +81,7 @@ def convert_dataset_unlabeled(
                 if os.path.exists(os.path.join(annotations_dir, annotation_path)):
                     # could not find annotation, skip case
                     continue
-
+            
             # read images
             scans = []
             for scan_properties in scan_paths:

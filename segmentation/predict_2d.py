@@ -23,7 +23,11 @@ def predict_process(test_path,config,base_dir):
     net.load_state_dict(checkpoint['state_dict'])
 
     pred = []
-    net = net.cuda()
+    if torch.cuda.is_available():
+        dev = torch.device("cuda")
+    else:
+        dev = torch.device("cpu")
+    net = net.to(dev)
     net.eval()
 
     in_1 = sitk.ReadImage(os.path.join(base_dir,test_path + '_0000.nii.gz'))

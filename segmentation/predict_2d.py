@@ -34,6 +34,8 @@ def predict_process(test_path,config,base_dir):
     in_2 = sitk.GetArrayFromImage(in_2).astype(np.float32)
     in_3 = sitk.GetArrayFromImage(in_3).astype(np.float32)
 
+    in_2 = in_1 + in_3 / 2
+
     image = np.stack((in_1,in_2,in_3),axis=0)
 
     with torch.no_grad():

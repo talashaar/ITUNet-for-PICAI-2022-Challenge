@@ -77,6 +77,9 @@ def make_segdata(base_dir,label_dir,output_dir):
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
         in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
+
+        in_2 = in_1 + in_3 / 2
+
         img = np.stack((in_1,in_2,in_3),axis=0)
 
         hdf5_path = os.path.join(data_dir_3d, str(count) + '.hdf5')
@@ -131,6 +134,9 @@ def make_semidata(base_dir,label_dir,output_dir,test_dir,seg_dir,csv_path):
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
         in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
+
+        in_2 = in_1 + in_3 / 2
+
         img = np.stack((in_1,in_2,in_3),axis=0)
 
         outc = rand_list[count]
@@ -158,6 +164,9 @@ def make_semidata(base_dir,label_dir,output_dir,test_dir,seg_dir,csv_path):
         in_1 = sitk.GetArrayFromImage(in_1).astype(np.int16)
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
         in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
+
+        in_2 = in_1 + in_3 / 2
+        
         img = np.stack((in_1,in_2,in_3),axis=0)
 
         outc = rand_list[count]

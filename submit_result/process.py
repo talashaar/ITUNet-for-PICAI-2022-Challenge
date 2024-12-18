@@ -367,7 +367,7 @@ class csPCaAlgorithm(SegmentationAlgorithm):
         #path to image files
         self.image_input_dirs = [
             "/input/images/transverse-t2-prostate-mri/",
-            "/input/images/transverse-adc-prostate-mri/",
+            #"/input/images/transverse-adc-prostate-mri/",
             "/input/images/transverse-hbv-prostate-mri/",
             # "/input/images/coronal-t2-prostate-mri/",  # not used in this algorithm
             # "/input/images/sagittal-t2-prostate-mri/"  # not used in this algorithm
@@ -503,7 +503,13 @@ class csPCaAlgorithm(SegmentationAlgorithm):
             sitk.GetArrayFromImage(x).astype(np.int16)
             for x in sample.scans
         ]
-        image = np.stack(cropped_img,axis=0).astype(np.float32)
+        print(f"Length before modification {len(cropped_img)}")
+        zero_replacement = np.copy(cropped_img[0])
+        zero_replacement[zero_replacement > 0] = 0
+        new_img = [cropped_img[0], zero_replacement, cropped_img[1]]
+        print(f"Length after modification {len(new_img)}")
+
+        image = np.stack(new_img,axis=0).astype(np.float32)
 
         zero_mask = np.ones((20,),dtype=np.float32)
 

@@ -501,7 +501,7 @@ class csPCaAlgorithm(SegmentationAlgorithm):
         print(f"Length before modification {len(cropped_img)}")
         zero_replacement = np.copy(cropped_img[0])
         zero_replacement[zero_replacement > 0] = 0
-        new_img = [cropped_img[0], zero_replacement, cropped_img[1]]
+        new_img = [zero_replacement, cropped_img[0], cropped_img[1]]
         print(f"Length after modification {len(new_img)}")
         image = np.stack(new_img,axis=0).astype(np.float32)
 

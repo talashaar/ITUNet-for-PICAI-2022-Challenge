@@ -2,7 +2,7 @@ FROM pytorch/pytorch:1.9.0-cuda10.2-cudnn7-runtime
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git
+    apt-get install -y git build-essential
 
 RUN groupadd -r algorithm && useradd -m --no-log-init -r -g algorithm algorithm
 

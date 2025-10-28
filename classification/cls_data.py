@@ -48,6 +48,14 @@ def get_weight_list(
     ckpt_path = Path(ckpt_path)
     path_list = []
 
+    print(f"Searching for weights in: {ckpt_path}")
+    print(f"Directory exists: {ckpt_path.exists()}")
+    
+    if ckpt_path.exists():
+        print("Contents of directory:")
+        for item in ckpt_path.iterdir():
+            print(f"  {item.name}")
+
     # search for weight files saved as `fold{fold_num}/epoch:{epoch}-train_loss:{train_loss}-val_loss:{val_loss}-train_acc:{train_acc}-val_ap:{val_ap}.pth
     for path in ckpt_path.glob('fold*'):
         if not path.is_dir():
@@ -63,12 +71,15 @@ def get_weight_list(
                 continue
 
         # select checkpoint
-        weight_path = os.listdir(path)
-        weight_path.sort(key=lambda x:int(x.split('-')[0].split(':')[-1]))
-        path_list.append(os.path.join(path, weight_path[-1]))
+        weight_files = os.listdir(path)
+        weight_files = [f for f in weight_files if f.endswith('.pth')]
+        if weight_files:
+            weight_files.sort(key=lambda x: int(x.split('-')[0].split(':')[-1]))
+            path_list.append(path / weight_files[-1])
 
     # search for weight files saved as `fold{fold_num}.pth`
     for path in ckpt_path.glob('fold*.pth'):
+        print(f"Found .pth file: {path.name}")
         if choice is not None:
             # check if fold number is in choice
             match = re.search(r'fold(\d+)', path.name)
@@ -79,6 +90,16 @@ def get_weight_list(
                 continue
         path_list.append(path)
 
+    # FIX: If still no weights found, try manual search
+    if len(path_list) == 0:
+        print("No weights found with glob patterns, trying manual search...")
+        for fold_num in [1, 2, 3, 4, 5]:
+            weight_file = ckpt_path / f'fold{fold_num}.pth'
+            if weight_file.exists():
+                print(f"Manually found: {weight_file}")
+                path_list.append(weight_file)
+
+    print(f"Final weight list ({len(path_list)} files): {path_list}")
     return path_list
 
 def store_images_labels_2d(save_path, patient_id, cts, labels):

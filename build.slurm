@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=picai_build
-#SBATCH --output=/HOME/alshaart/logs/build_logstdout.txt
-#SBATCH --error=/HOME/alshaart/logs/build_logstderr.txt
+#SBATCH --output=/HOME/alshaart/logs/build_ADCzero_4folds_logstdout.txt
+#SBATCH --error=/HOME/alshaart/logs/buildADCzeri_4folds_logstderr.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL

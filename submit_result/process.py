@@ -20,6 +20,7 @@ import torch.nn as nn
 import numpy as np
 import SimpleITK as sitk
 import torch
+import argparse
 from efficientnet_pytorch import EfficientNet
 from evalutils import SegmentationAlgorithm
 from evalutils.validators import (UniqueImagesValidator,
@@ -355,14 +356,21 @@ class csPCaAlgorithm(SegmentationAlgorithm):
             ),
         )
 
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--caseid', type=str, default="10017")
+        args, _ = parser.parse_known_args()
+        self.caseid = args.caseid
+
         # set expected i/o paths in gc env (image i/p, algorithms, prediction o/p)
         # see grand-challenge.org/algorithms/interfaces/ for expected path per i/o interface
         # note: these are fixed paths that should not be modified
         self.start_time = time.time()
 
         # directory to model weights
-        self.algorithm_weights_dir = Path("/opt/algorithm/weights/")
+        #self.algorithm_weights_dir = Path("/opt/algorithm/weights/")
         # self.algorithm_weights_dir = Path("./weights/")
+        # change this to the weights of 4 folds model
+        self.algorithm_weights_dir = Path("/model/weights/")
 
         #path to image files
         self.image_input_dirs = [
@@ -379,7 +387,15 @@ class csPCaAlgorithm(SegmentationAlgorithm):
         #     # "/input/images/coronal-t2-prostate-mri/",  # not used in this algorithm
         #     # "/input/images/sagittal-t2-prostate-mri/"  # not used in this algorithm
         # ]
-        self.image_input_paths = [list(Path(x).glob("*.mha"))[0] for x in self.image_input_dirs]
+
+        self.image_input_dir = f"/input/{self.caseid}/"
+        self.pattern = [
+            "*_t2w.mha",
+            "*_hbv.mha"
+        ]
+
+        self.image_input_paths = [list(Path(self.image_input_dir).glob(x))[0] for x in self.pattern]
+        print(self.image_input_paths)
 
         # load clinical information
         # with open("./test/clinical-information-prostate-mri.json") as fp:
@@ -390,12 +406,14 @@ class csPCaAlgorithm(SegmentationAlgorithm):
         # self.case_level_likelihood_output_file = Path("./test/cspca-case-level-likelihood.json")
 
         # load clinical information
-        with open("/input/clinical-information-prostate-mri.json") as fp:
-            self.clinical_info = json.load(fp)
+        #with open("/input/clinical-information-prostate-mri.json") as fp:
+        #    self.clinical_info = json.load(fp)
 
         # path to output files
-        self.detection_map_output_path = Path("/output/images/cspca-detection-map/cspca_detection_map.mha")
-        self.case_level_likelihood_output_file = Path("/output/cspca-case-level-likelihood.json")
+        #self.detection_map_output_path = Path("/output/images/cspca-detection-map/cspca_detection_map.mha")
+        #self.case_level_likelihood_output_file = Path("/output/cspca-case-level-likelihood.json")
+        self.detection_map_output_path = Path(f"/output/images/cspca-detection-map/{self.caseid}_cspca_detection_map.mha")
+        self.case_level_likelihood_output_file = Path(f"/output/{self.caseid}_cspca-case-level-likelihood.json")
 
         # create output directory
         self.detection_map_output_path.parent.mkdir(parents=True, exist_ok=True)

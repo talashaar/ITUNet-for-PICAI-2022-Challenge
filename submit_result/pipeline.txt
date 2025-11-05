@@ -1,0 +1,42 @@
+# first move the weights to testdata_something and rename it 
+cp ~/output/step4_semi_ADCavg_4folds/ckpt/detect/itunet_d24/fold*.pth ~/testdata_ADCavg/weights/
+
+cd ~/testdata_ADCavg/weights
+for i in {1..5}; do
+mv "fold${i}.pth" "F$(($i-1)).pth"
+done
+
+#run build then evaluate scripts
+build.slurm 
+
+chmod 777 ~/testoutput_ADCavg/
+
+evaluate.slurm
+
+cd /picai_eval/src/picai_eval
+
+python3 __main__.py -i ~/testoutput_ADCavg/images/cspca-detection-map/ -l ~/ITUNet-for-PICAI-2022-Challenge/picai_labels/csPCa_lesion_delineations/human_expert/resampled/renamed/ -o ~/testoutput_ADCavg/eval -s ~/testoutput/subjectlist.json 
+Found prediction and label for 255 cases. Here are some examples:
+['10000', '10001', '10003', '10006', '10017']
+Evaluating:  10%|███████▍                                                                    | 25/255 [00:01<00:18, 12.49it/s]Warning: padding prediction to match label!
+Evaluating:  93%|██████████████████████████████████████████████████████████████████████     | 238/255 [00:23<00:02,  7.31it/s]Warning: padding prediction to match label!
+Evaluating: 100%|███████████████████████████████████████████████████████████████████████████| 255/255 [00:25<00:00, 10.06it/s]
+Metrics:
+Metrics(auroc=50.36%, AP=8.64%, 255 cases, 48 lesions)
+
+
+python3 __main__.py -i ~/testoutput_ADCavg/images/cspca-detection-map/ -l ~/ITUNet-for-PICAI-2022-Challenge/picai_labels/csPCa_lesion_delineations/AI/Bosma22a/renamed/ -o ~/testoutput_ADCavg/eval_ai -s ~/testoutput/subjectlist_ai.json
+Found prediction and label for 295 cases. Here are some examples:
+['10000', '10001', '10003', '10006', '10017']
+Evaluating:   9%|██████▉                                                                     | 27/295 [00:01<00:17, 15.40it/s]Warning: padding prediction to match label!
+Evaluating:  94%|██████████████████████████████████████████████████████████████████████▏    | 276/295 [00:24<00:02,  9.25it/s]Warning: padding prediction to match label!
+Evaluating: 100%|███████████████████████████████████████████████████████████████████████████| 295/295 [00:26<00:00, 11.06it/s]
+Metrics:
+Metrics(auroc=60.18%, AP=18.45%, 295 cases, 90 lesions)
+
+
+
+
+
+
+

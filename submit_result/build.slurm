@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=picai_build_submition_HBVavg
-#SBATCH --output=/HOME/alshaart/logs/build_submition_HBVavg_logstdout.txt
-#SBATCH --error=/HOME/alshaart/logs/build_submition_HBVavg_logstderr.txt
+#SBATCH --output=/HOME/alshaart/logs/build_submition_HBVavg_4folds_logstdout.txt
+#SBATCH --error=/HOME/alshaart/logs/build_submition_HBVavg_4folds_logstderr.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL

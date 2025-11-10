@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=picai_preprocess
-#SBATCH --output=/HOME/alshaart/logs/picai_preprocess_ADCzero_logstdout.txt
-#SBATCH --error=/HOME/alshaart/logs/picai_preprocess_ADCzero_logstderr.txt
+#SBATCH --output=/HOME/alshaart/logs/picai_preprocess_ADCzero_4folds_logstdout.txt
+#SBATCH --error=/HOME/alshaart/logs/picai_preprocess_ADCzero_4folds_logstderr.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL

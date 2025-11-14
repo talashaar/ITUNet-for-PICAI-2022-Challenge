@@ -34,7 +34,7 @@ def main():
 
     # Perform inference with the classification model
     predict_test5c(
-        weight_path=supervised_weights_dir / 'step1_classification_HBVZero' / 'ckpt/picai/v0/',
+        weight_path=supervised_weights_dir / 'step1_classification_HBVzero_4folds' / 'ckpt/picai/v0/',
         base_dir=preprocessed_dir / 'nnUNet_test_data',
         csv_save_path=workdir / 'test_3c.csv',
     )
@@ -44,7 +44,7 @@ def main():
     outdir = workdir / 'segout/segmentation_result'
     save_npy(
         data_path=data_path,
-        ckpt_path_base=supervised_weights_dir / 'step2_segmentation_HBVZero' / 'ckpt/seg/',
+        ckpt_path_base=supervised_weights_dir / 'step2_segmentation_HBVzero_4folds' / 'ckpt/seg/',
         save_dir_base=workdir / 'segout',
     )
 

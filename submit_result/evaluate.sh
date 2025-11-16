@@ -10,5 +10,5 @@ for i in $(find "/HOME/alshaart/Data/picai_data/images_path/fold0/" -type d -max
         -v /HOME/alshaart/testdata_ADCzero/:/model/ \
         -v /HOME/alshaart/testoutput_ADCzero:/output/ \
         -v /HOME/alshaart/Data/picai_data/images_path/fold0/:/input/ \
-        picai_baseline_unet_processor_ADCzero python3 process.py --caseid $i;
+        picai_baseline_unet_processor_adczero python3 process.py --caseid $i;
 done

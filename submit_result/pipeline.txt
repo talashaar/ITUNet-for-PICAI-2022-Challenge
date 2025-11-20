@@ -1,0 +1,18 @@
+cp ~/output/step4_semi_HBVzero_4folds/ckpt/detect/itunet_d24/fold*.pth ~/testdata_HBVzero/weights/
+
+cd ~/testdata_HBVzero/weights
+
+for i in {1..5}; do
+mv "fold${i}.pth" "F$(($i-1)).pth"
+done
+
+build.slurm
+
+chmod 777 ~/testoutput_HBVzero/
+
+evaluate.slurm
+
+cd /picai_eval/src/picai_eval
+
+python3 __main__.py -i ~/testoutput_HBVzero/images/cspca-detection-map/ -l ~/ITUNet-for-PICAI-2022-Challenge/picai_labels/csPCa_lesion_delineations/human_expert/resampled/renamed/ -o ~/testoutput_HBVzero/eval -s ~/testoutput/subjectlist.json 
+

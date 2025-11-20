@@ -3,8 +3,8 @@ import numpy as np
 
 # Data for 4-folds (with missing values marked as None)
 sequences = ['Full\nResampled', 'ADC\nZero', 'HBV\nZero', 'T2W\nZero', 'ADC\nAvg', 'HBV\nAvg', 'T2W\nAvg']
-auroc_values = [78.15, 81.12, None, None, 50.36, 64.79, 54.99]  # None for missing values
-ap_values = [34.89, 46.32, None, None, 8.64, 9.36, 6.37]        # None for missing values
+auroc_values = [78.15, 81.12, 80.72, None, 50.36, 64.79, 54.99]  # None for missing values
+ap_values = [34.89, 46.32, 29.34, None, 8.64, 9.36, 6.37]        # None for missing values
 
 fig, ax = plt.subplots(figsize=(14, 8))
 
@@ -72,4 +72,4 @@ plt.savefig('4folds_results.pdf', bbox_inches='tight')
 print("4-Folds plots saved successfully:")
 print("- 4folds_results.png")
 print("- 4folds_results.pdf")
-print(f"Missing results: HBV Zero and T2W Zero")
+print(f"Missing results: T2W Zero")

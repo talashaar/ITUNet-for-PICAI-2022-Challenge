@@ -15,4 +15,20 @@ evaluate.slurm
 cd /picai_eval/src/picai_eval
 
 python3 __main__.py -i ~/testoutput_HBVzero/images/cspca-detection-map/ -l ~/ITUNet-for-PICAI-2022-Challenge/picai_labels/csPCa_lesion_delineations/human_expert/resampled/renamed/ -o ~/testoutput_HBVzero/eval -s ~/testoutput/subjectlist.json 
+Found prediction and label for 255 cases. Here are some examples:
+['10000', '10001', '10003', '10006', '10017']
+Evaluating:  10%|███████▋                                                                    | 26/255 [00:03<00:22, 10.35it/s]Warning: padding prediction to match label!
+Evaluating:  94%|██████████████████████████████████████████████████████████████████████▎    | 239/255 [00:24<00:02,  7.72it/s]Warning: padding prediction to match label!
+Evaluating: 100%|███████████████████████████████████████████████████████████████████████████| 255/255 [00:26<00:00,  9.64it/s]
+Metrics:
+Metrics(auroc=80.72%, AP=29.34%, 255 cases, 48 lesions)
 
+
+python3 __main__.py -i ~/testoutput_HBVzero/images/cspca-detection-map/ -l ~/ITUNet-for-PICAI-2022-Challenge/picai_labels/csPCa_lesion_delineations/AI/Bosma22a/renamed/ -o ~/testoutput_HBVzero/eval_ai -s ~/testoutput/subjectlist_ai.json
+Found prediction and label for 295 cases. Here are some examples:
+['10000', '10001', '10003', '10006', '10017']
+Evaluating:   9%|███████▏                                                                    | 28/295 [00:01<00:18, 14.38it/s]Warning: padding prediction to match label!
+Evaluating:  93%|█████████████████████████████████████████████████████████████████████▉     | 275/295 [00:23<00:01, 10.09it/s]Warning: padding prediction to match label!
+Evaluating: 100%|███████████████████████████████████████████████████████████████████████████| 295/295 [00:25<00:00, 11.61it/s]
+Metrics:
+Metrics(auroc=80.88%, AP=42.13%, 295 cases, 90 lesions)

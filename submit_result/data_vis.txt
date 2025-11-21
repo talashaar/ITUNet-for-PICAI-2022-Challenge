@@ -1,0 +1,144 @@
+Data types:
+patient_id           int64
+study_id             int64
+mri_date            object
+patient_age          int64
+psa                float64
+psad               float64
+prostate_volume    float64
+histopath_type      object
+lesion_GS           object
+lesion_ISUP         object
+case_ISUP            int64
+case_csPCa          object
+center              object
+dtype: object
+
+Total patients in dataset: 1500
+
+Fold assignments from PI-CAI splits:
+fold0: 1500 patients
+fold1: 1500 patients
+fold2: 1500 patients
+fold3: 1500 patients
+fold4: 1500 patients
+
+Patients assigned to folds: 0
+Patients without fold assignment: 1500
+
+⚠ WARNING: No patients were assigned to folds!
+This might be because patient IDs in the splits don't match the CSV file.
+Let's check the first few patient IDs in both datasets:
+First 10 patient IDs in CSV: [10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009]
+First 10 patient IDs in fold0: [100021000002, 100041000004, 100051000005, 100071000007, 100081000008, 100091000009, 100101000010, 100111000011, 100121000012, 100131000013]
+
+First 10 study IDs in CSV: [1000000, 1000001, 1000002, 1000003, 1000004, 1000005, 1000006, 1000007, 1000008, 1000009]
+
+Trying to match with study_id...
+Patients assigned to folds using study_id: 0
+
+Cancer status distribution:
+cancer_status
+No Cancer    847
+Cancer       653
+Name: count, dtype: int64
+
+Highest ISUP distribution:
+highest_isup
+0.0    847
+1.0    228
+2.0    234
+3.0     99
+4.0     40
+5.0     52
+Name: count, dtype: int64
+
+
+Cancer cross-tabulation:
+cancer_status  Cancer  No Cancer
+fold                            
+fold0             125        191
+fold1             130        164
+fold2             138        155
+fold3             126        160
+fold4             134        177
+Plot saved as:
+- /HOME/alshaart/ITUNet-for-PICAI-2022-Challenge/cancer_distribution_across_folds.png
+- /HOME/alshaart/ITUNet-for-PICAI-2022-Challenge/cancer_distribution_across_folds.pdf
+======================================================================
+CANCER vs NO-CANCER DISTRIBUTION ACROSS FOLDS
+======================================================================
+
+FOLD0:
+  Total patients: 316
+  Cancer cases: 125 (39.6%)
+  No-cancer cases: 191 (60.4%)
+  Cancer severity (Highest ISUP grades):
+    ISUP 1: 34 cases (27.2%)
+    ISUP 2: 53 cases (42.4%)
+    ISUP 3: 19 cases (15.2%)
+    ISUP 4: 10 cases (8.0%)
+    ISUP 5: 9 cases (7.2%)
+
+FOLD1:
+  Total patients: 294
+  Cancer cases: 130 (44.2%)
+  No-cancer cases: 164 (55.8%)
+  Cancer severity (Highest ISUP grades):
+    ISUP 1: 39 cases (30.0%)
+    ISUP 2: 41 cases (31.5%)
+    ISUP 3: 21 cases (16.2%)
+    ISUP 4: 11 cases (8.5%)
+    ISUP 5: 18 cases (13.8%)
+
+FOLD2:
+  Total patients: 293
+  Cancer cases: 138 (47.1%)
+  No-cancer cases: 155 (52.9%)
+  Cancer severity (Highest ISUP grades):
+    ISUP 1: 58 cases (42.0%)
+    ISUP 2: 38 cases (27.5%)
+    ISUP 3: 25 cases (18.1%)
+    ISUP 4: 6 cases (4.3%)
+    ISUP 5: 11 cases (8.0%)
+
+FOLD3:
+  Total patients: 286
+  Cancer cases: 126 (44.1%)
+  No-cancer cases: 160 (55.9%)
+  Cancer severity (Highest ISUP grades):
+    ISUP 1: 45 cases (35.7%)
+    ISUP 2: 54 cases (42.9%)
+    ISUP 3: 14 cases (11.1%)
+    ISUP 4: 6 cases (4.8%)
+    ISUP 5: 7 cases (5.6%)
+
+FOLD4:
+  Total patients: 311
+  Cancer cases: 134 (43.1%)
+  No-cancer cases: 177 (56.9%)
+  Cancer severity (Highest ISUP grades):
+    ISUP 1: 52 cases (38.8%)
+    ISUP 2: 48 cases (35.8%)
+    ISUP 3: 20 cases (14.9%)
+    ISUP 4: 7 cases (5.2%)
+    ISUP 5: 7 cases (5.2%)
+
+======================================================================
+OVERALL CANCER STATISTICS
+======================================================================
+Total patients: 1500
+Total cancer cases: 653 (43.5%)
+Total no-cancer cases: 847 (56.5%)
+
+FOLD BALANCE ANALYSIS (Cancer Distribution):
+  fold0: 39.6% cancer rate
+  fold1: 44.2% cancer rate
+  fold2: 47.1% cancer rate
+  fold3: 44.1% cancer rate
+  fold4: 43.1% cancer rate
+
+Average cancer rate: 43.6%
+Standard deviation: 2.4%
+Max-Min difference: 7.5%
+✓ Good balance: Cancer rates are well distributed across folds

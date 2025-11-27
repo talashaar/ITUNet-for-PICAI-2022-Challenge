@@ -139,9 +139,11 @@ def make_data(
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
         in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
 
-        in_1 = np.copy(in_2)
-        in_1[in_1 > 0] = 0
+        #in_1 = np.copy(in_2)
+        #in_1[in_1 > 0] = 0
         
+        in_1 = np.zeros_like(in_1)
+
         img = np.stack((in_1,in_2,in_3),axis=0)
         # print(img.shape)
 
@@ -197,8 +199,10 @@ def predict_test5c(
         in_2 = sitk.GetArrayFromImage(in_2).astype(np.int16)
         in_3 = sitk.GetArrayFromImage(in_3).astype(np.int16)
 
-        in_1 = np.copy(in_2)
-        in_1[in_1 > 0] = 0
+        #in_1 = np.copy(in_2)
+        #in_1[in_1 > 0] = 0
+
+        in_1 = np.zeros_like(in_1)
 
         image = np.stack((in_1,in_2,in_3),axis=0).astype(np.float32)
 

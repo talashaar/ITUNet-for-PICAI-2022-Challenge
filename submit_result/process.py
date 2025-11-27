@@ -385,6 +385,7 @@ class csPCaAlgorithm(SegmentationAlgorithm):
 
         self.image_input_dir = f"/input/{self.caseid}/"
         self.pattern = [
+            "*_t2w.mha",
             "*_adc.mha",
             "*_hbv.mha"
         ]
@@ -518,9 +519,10 @@ class csPCaAlgorithm(SegmentationAlgorithm):
         ]
         #image = np.stack(cropped_img,axis=0).astype(np.float32)
         print(f"Length before modification {len(cropped_img)}")
-        zero_replacement = np.copy(cropped_img[0])
-        zero_replacement[zero_replacement > 0] = 0
-        new_img = [zero_replacement, cropped_img[0], cropped_img[1]]
+        #zero_replacement = np.copy(cropped_img[0])
+        #zero_replacement[zero_replacement > 0] = 0
+        #new_img = [zero_replacement, cropped_img[0], cropped_img[1]]
+        new_img = [np.zeros_like(cropped_img[0]), cropped_img[1], cropped_img[2]]
         print(f"Length after modification {len(new_img)}")
         image = np.stack(new_img,axis=0).astype(np.float32)
 

@@ -1,0 +1,17 @@
+cp ~/output/step4_semi_T2Wzero_4folds/ckpt/detect/itunet_d24/fold*.pth ~/testdata_T2Wzero/weights/
+
+cd testdata_T2Wzero/weights/
+
+for i in {1..5}; do
+mv "fold${i}.pth" "F$(($i-1)).pth"
+done
+
+build.slurm
+
+chmod 777 ~/testoutput_T2Wzero/
+
+evaluate.slurm
+
+cd /picai_eval/src/picai_eval
+
+python3 __main__.py -i ~/testoutput_T2Wzero/images/cspca-detection-map/ -l ~/ITUNet-for-PICAI-2022-Challenge/picai_labels/csPCa_lesion_delineations/human_expert/resampled/renamed/ -o ~/testoutput_T2Wzero/eval -s ~/testoutput/subjectlist.json 

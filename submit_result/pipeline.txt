@@ -38,3 +38,6 @@ Metrics(auroc=81.12%, AP=46.32%, 295 cases, 90 lesions)
 
 
 
+random
+Metrics:
+Metrics(auroc=44.01%, AP=-0.00%, 255 cases, 48 lesions)

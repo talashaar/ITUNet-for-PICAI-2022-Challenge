@@ -10,13 +10,13 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mail-user=tala.alshaar@unifr.ch
 
-docker load -i /HOME/alshaart/ITUNet-for-PICAI-2022-Challenge/picai_trainer_latest.tar ;
+docker load -i /HOME/alshaart/ITUNet-for-PICAI-2022-Challenge/picai_trainer_latest_new_full.tar ;
 
 docker login nvcr.io -u '$oauthtoken' -p 'ZmMzMmlkcjN1bm92Nm5xbGRva3VhOTJjMW46MGUxZjFmMzgtNjE4Mi00ZTgyLTg3NTctODk3ZTk0NGQ0MzBl' && 
 docker run --rm --gpus all -v /HOME/alshaart/Data:/Data  -v /HOME/alshaart/output:/output --shm-size=16g \
   yukiyaumimi/picai_trainer:latest \
   python3 /opt/algorithm/ITUNet-for-PICAI-2022-Challenge/step_3_prepare_detection_data.py \
-   --workdir /Workdirfull4folds/ \
-   --preprocesseddir /output/full_4folds/ \
+   --workdir /Workdirnewfull4folds/ \
+   --preprocesseddir /output/new_full_4folds/ \
    --supervisedweightsdir /output/ \
-   --outputdir /output/step3_predict_full_4folds
+   --outputdir /output/step3_predict_new_full_4folds

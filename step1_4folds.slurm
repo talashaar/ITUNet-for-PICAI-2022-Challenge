@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=picai_supervisedclass
-#SBATCH --output=/HOME/alshaart/logs/supervisedclass_ADCzero_4folds_logstdout.txt
-#SBATCH --error=/HOME/alshaart/logs/supervisedclassADCzero_4folds_logstderr.txt
+#SBATCH --output=/HOME/alshaart/logs/supervisedclass_new_ADCzero_4folds_logstdout.txt
+#SBATCH --error=/HOME/alshaart/logs/supervisedclass_new_ADCzero_4folds_logstderr.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL
@@ -10,13 +10,13 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mail-user=tala.alshaar@unifr.ch
 
-docker load -i /HOME/alshaart/ITUNet-for-PICAI-2022-Challenge/picai_trainer_latest_ADCzero.tar ;
+docker load -i /HOME/alshaart/ITUNet-for-PICAI-2022-Challenge/picai_trainer_latest__new_ADCzero.tar ;
 
 docker login nvcr.io -u '$oauthtoken' -p 'ZmMzMmlkcjN1bm92Nm5xbGRva3VhOTJjMW46MGUxZjFmMzgtNjE4Mi00ZTgyLTg3NTctODk3ZTk0NGQ0MzBl' && 
 docker run --rm --gpus all -v /HOME/alshaart/Data:/Data  -v /HOME/alshaart/output:/output --shm-size=16g \
   yukiyaumimi/picai_trainer:latest \
   python3 /opt/algorithm/ITUNet-for-PICAI-2022-Challenge/step_1_supervised_classification.py \
-   --workdir /WorkdirADCzero4folds/ \
-   --preprocesseddir /output/ADC_Zero_4folds/ \
-   --outputdir /output/step1_classification_ADCzero_4folds \
+   --workdir /WorkdirnewADCzero4folds/ \
+   --preprocesseddir /output/ADC_Zero_new_4folds/ \
+   --outputdir /output/step1_classification_new_ADCzero_4folds \
    --checkpointsdir /Data/checkpoint/

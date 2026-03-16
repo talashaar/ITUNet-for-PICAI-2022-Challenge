@@ -1,0 +1,23 @@
+# first move the weights to testdata_something and rename it 
+cp ~/output/step4_semi_neww_full_4folds/ckpt/detect/itunet_d24/fold*.pth ~/testdata_newfull/weights/
+
+cd testdata_newfull/weights
+
+for i in {1..5}; do
+> mv "fold${i}.pth" "F$(($i-1)).pth"
+done
+
+#run build then evaluate scripts
+build.slurm 
+
+chmod 777 ~/testoutput_newfull/
+
+evaluate.slurm
+
+python3 __main__.py -i ~/testoutput_newfull/images/cspca-detection-map/ -l ~/ITUNet-for-PICAI-2022-Challenge/picai_labels/csPCa_lesion_delineations/human_expert/resampled/renamed/ -o ~/testoutput_newfull/eval -s ~/testoutput_newfull/subjectlist.json 
+
+Metrics(auroc=79.31%, AP=35.91%, 252 cases, 49 lesions)
+
+
+python3 __main__.py -i ~/testoutput_newfull/images/cspca-detection-map/ -l ~/ITUNet-for-PICAI-2022-Challenge/picai_labels/csPCa_lesion_delineations/AI/Bosma22a/renamed/ -o ~/testoutput_newfull/eval_ai -s ~/testoutput_newfull/subjectlist_ai.json
+

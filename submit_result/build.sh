@@ -2,6 +2,6 @@
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 docker build "$SCRIPTPATH" \
-    -t picai_baseline_unet_processor
+    -t picai_baseline_unet_processor_newfull
 
-docker save -o picai_baseline_unet_processor.tar picai_baseline_unet_processor
+docker save -o picai_baseline_unet_processor_newfull.tar picai_baseline_unet_processor_newfull

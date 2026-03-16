@@ -5,10 +5,10 @@
 # change/HOME/alshaart/testoutput to the directory where the outputs are to be written
 
 
-for i in $(find "/HOME/alshaart/Data/picai_data/images_path/fold0/" -type d -maxdepth 1 -printf '%f '); do 
+for i in $(find "/HOME/alshaart/Data/picai_data/images_path/fold4/" -type d -maxdepth 1 -printf '%f '); do 
     docker run  --gpus='"device=2"' --rm \
-        -v /HOME/alshaart/full_test_data/:/model/ \
-        -v /HOME/alshaart/full_test_output:/output/ \
-        -v /HOME/alshaart/Data/picai_data/images_path/fold0/:/input/ \
-        picai_baseline_unet_processor python3 process.py --caseid $i;
+        -v /HOME/alshaart/testdata_newfull/:/model/ \
+        -v /HOME/alshaart/testoutput_newfull:/output/ \
+        -v /HOME/alshaart/Data/picai_data/images_path/fold4/:/input/ \
+        picai_baseline_unet_processor_newfull python3 process.py --caseid $i;
 done

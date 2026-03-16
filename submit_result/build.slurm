@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=picai_build_submition_full_4folds
-#SBATCH --output=/HOME/alshaart/logs/build_submition_full_4folds_logstdout.txt
-#SBATCH --error=/HOME/alshaart/logs/build_submition_full_4folds_logstderr.txt
+#SBATCH --job-name=picai_build_submition_new_full_4folds
+#SBATCH --output=/HOME/alshaart/logs/build_submition_new_full_4folds_logstdout.txt
+#SBATCH --error=/HOME/alshaart/logs/build_submition_new_full_4folds_logstderr.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL
